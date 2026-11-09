@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//PocketHost//PocketCon//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:pocketcon-2027@pockethost.io
+DTSTAMP:20261109T000000Z
+DTSTART;VALUE=DATE:20270206
+DTEND;VALUE=DATE:20270207
+SUMMARY:PocketCon 2027
+DESCRIPTION:A free livestream on the state of PocketBase and PocketHost. Start time and stream link posted Jan 1. https://discord.gg/nVTxCMEcGT
+URL:https://pocketcon.pockethost.io
+END:VEVENT
+END:VCALENDAR
