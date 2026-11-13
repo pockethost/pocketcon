@@ -12,6 +12,6 @@ jobs:
         with:
           node-version: 22
       - run: npm install --omit=dev
-      - run: npx pockethost@latest deploy pocketcon
+      - run: npx pockethost@latest deploy pocketcon -y
         env:
           POCKETHOST_TOKEN: ${{ secrets.POCKETHOST_TOKEN }}
