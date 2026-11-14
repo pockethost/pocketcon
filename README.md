@@ -2,7 +2,7 @@
 
 The site for **PocketCon 2027**, a free livestream on the state of PocketBase and PocketHost. Saturday, February 6, 2027, on [Discord](https://discord.gg/nVTxCMEcGT).
 
-Live at **https://pocketcon.pockethost.io**.
+Live at **https://pocketcon.dev** (also https://pocketcon.pockethost.io).
 
 Built with [PocketPages](https://pocketpages.dev) and hosted on [PocketHost](https://pockethost.io).
 
