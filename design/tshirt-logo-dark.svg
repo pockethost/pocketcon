@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 290" width="2640" height="1160">
+  <title>PocketCon 2027</title>
+  <rect width="660" height="290" fill="#0b0d12"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14">
+    <rect x="36" y="36" width="232" height="232" rx="40" stroke="#ff7a45"/>
+    <rect x="22" y="22" width="232" height="232" rx="40" stroke="#f4f1ea" fill="#0b0d12"/>
+    <path d="M74,62 V150 M74,62 H100 A26,26 0 0 1 100,114 H74" stroke="#f4f1ea"/>
+    <path d="M226,166 A40,40 0 1 0 226,226" stroke="#ff7a45"/>
+    <path d="M312,115 A30,30 0 0 1 372,115 C372,143 312,163 312,195 H372 M428,85 C468,85 468,195 428,195 C388,195 388,85 428,85 Z M484,115 A30,30 0 0 1 544,115 C544,143 484,163 484,195 H544 M570,85 H630 L588,195" stroke="#f4f1ea"/>
+  </g>
+</svg>
