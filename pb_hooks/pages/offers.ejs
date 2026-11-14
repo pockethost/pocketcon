@@ -1,0 +1,48 @@
+<% meta('title', 'Offers') %>
+<section class="page">
+  <h1 class="page-title">Offers</h1>
+  <p class="lede" data-signed-out>Extras for PocketCon attendees. <a href="/register?next=/offers">Register</a> (free) to see them.</p>
+
+  <div data-signed-in hidden>
+    <p class="lede">Thanks for registering. A few extras for PocketCon attendees, each on its own site. Use the code at checkout.</p>
+    <ul class="offers" id="offers" aria-live="polite"><li class="empty">Loading…</li></ul>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('pocketcon:ready', async () => {
+    const { pb, esc } = PocketCon
+    if (!pb.authStore.isValid) return
+    const list = document.getElementById('offers')
+    try {
+      const offers = await pb.collection('offers').getFullList({ sort: 'sort,created' })
+      if (!offers.length) {
+        list.innerHTML = '<li class="empty">Offers are on the way. Check back soon.</li>'
+        return
+      }
+      list.innerHTML = offers
+        .map(
+          (o) => `<li>
+            <div>
+              <h3>${esc(o.title)}</h3>
+              ${o.description ? `<p>${esc(o.description)}</p>` : ''}
+              ${o.code ? `<p class="code">Code <button type="button" class="copy" data-code="${esc(o.code)}" title="Copy">${esc(o.code)}</button></p>` : ''}
+            </div>
+            <a class="btn highlight" href="${esc(o.url)}" target="_blank" rel="noopener">${esc(o.cta || 'Get it')}</a>
+          </li>`
+        )
+        .join('')
+      list.querySelectorAll('.copy').forEach((b) =>
+        b.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(b.dataset.code)
+            b.classList.add('copied')
+            setTimeout(() => b.classList.remove('copied'), 1200)
+          } catch (_) {}
+        })
+      )
+    } catch (err) {
+      list.innerHTML = `<li class="empty">${esc(PocketCon.message(err))}</li>`
+    }
+  })
+</script>

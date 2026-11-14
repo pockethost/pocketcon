@@ -262,6 +262,28 @@ button.btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
 .ok p { margin: 0.25rem 0; }
 [hidden] { display: none !important; }
 
+.offers { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.offers li {
+  display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px;
+}
+.offers li.empty { color: var(--muted); display: block; }
+.offers h3 { margin: 0 0 4px; font-size: 1.15rem; }
+.offers p { margin: 0 0 6px; color: var(--muted); }
+.offers li > div { flex: 1 1 18rem; }
+.code { font-family: var(--mono); font-size: 0.85rem; }
+.copy {
+  font: inherit; font-weight: 600; color: var(--accent-2); cursor: pointer;
+  background: rgba(255, 194, 75, 0.08); border: 1px dashed var(--accent-2); border-radius: 8px; padding: 2px 8px;
+}
+.copy.copied::after { content: ' ✓ copied'; color: var(--muted); font-weight: 400; }
+
+.oauth { display: grid; gap: 10px; max-width: 24rem; margin-bottom: 1.5rem; }
+.oauth[hidden] { display: none !important; }
+.oauth-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: var(--panel) !important; }
+.or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.85rem; margin: 6px 0 0; }
+.or::before, .or::after { content: ''; flex: 1; border-top: 1px solid var(--line); }
+
 @media (prefers-reduced-motion: reduce) {
   .btn { transition: none; }
   .btn:hover { transform: none; }

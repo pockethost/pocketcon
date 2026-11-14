@@ -5,6 +5,4 @@ module.exports = {
   startsAt: '2027-02-06T00:00:00Z',
   discord: 'https://discord.gg/XkAetnQEuc',
   github: 'https://github.com/pockethost/pocketcon',
-  // The shirt store (e.g. a Fourthwall shop). Empty hides every shirt link.
-  shirtUrl: '',
 }
