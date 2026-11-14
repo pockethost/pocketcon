@@ -121,7 +121,7 @@
         const name = gh.elements.name.value.trim()
         const org = gh.elements.org.value.trim()
         if (org && !/^[A-Za-z0-9-]+$/.test(org)) throw new Error('That organization name has characters GitHub does not allow.')
-        const { state } = await api('/setup/github/start', {})
+        const { state, githubWeb } = await api('/setup/github/start', {})
         const manifest = {
           name,
           url: origin,
@@ -130,9 +130,10 @@
           callback_urls: [redirect],
           hook_attributes: { url: origin + '/', active: false },
           public: true,
-          default_permissions: { email_addresses: 'read' },
+          // User permission "Email addresses" (read), so sign-in can see private emails. The manifest key is `emails`.
+          default_permissions: { emails: 'read' },
         }
-        const base = org ? `https://github.com/organizations/${org}/settings/apps/new` : 'https://github.com/settings/apps/new'
+        const base = org ? `${githubWeb}/organizations/${org}/settings/apps/new` : `${githubWeb}/settings/apps/new`
         const f = document.createElement('form')
         f.method = 'post'
         f.action = `${base}?state=${encodeURIComponent(state)}`

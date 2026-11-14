@@ -8,7 +8,7 @@ module.exports = {
       return ctx.res.redirect('/setup', { flash: { error: 'GitHub setup expired or was already used. Start again.' } })
     }
     try {
-      const app = s.convertManifestCode(ctx.req.query('code'))
+      const app = s.convertManifestCode(ctx.req.query('code'), s.githubAPI(ctx))
       s.saveProvider(ctx.app, 'github', app.clientId, app.clientSecret)
       ctx.log.info('oauthsetup: github provider saved', 'slug', app.slug)
       return ctx.res.redirect('/setup', { flash: { ok: `GitHub sign-in is on (GitHub App "${app.slug}").`, github: app.htmlURL } })

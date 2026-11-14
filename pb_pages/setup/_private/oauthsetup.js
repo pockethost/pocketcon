@@ -60,10 +60,10 @@ function takeGitHubState(ctx, state) {
 }
 
 // GitHub swaps the one-time manifest code for the new app's credentials. No auth needed: the code is the proof.
-function convertManifestCode(code) {
+function convertManifestCode(code, apiBase = 'https://api.github.com') {
   if (!/^[A-Za-z0-9_-]{1,100}$/.test(code || '')) throw new Error('bad code')
   const res = $http.send({
-    url: `https://api.github.com/app-manifests/${code}/conversions`,
+    url: `${apiBase}/app-manifests/${code}/conversions`,
     method: 'POST',
     headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'pocketcon-oauthsetup', 'X-GitHub-Api-Version': '2022-11-28' },
     timeout: 15,
@@ -98,4 +98,22 @@ function checkGoogleClient(clientId, clientSecret, redirectURI) {
   return { ok: true, error }
 }
 
-module.exports = { requireSuperuser, saveProvider, status, newGitHubState, takeGitHubState, convertManifestCode, checkGoogleClient }
+// Dev mode only: point at a local mock of GitHub (dev/mock-github.py) instead of github.com.
+function githubWeb(ctx) {
+  return (ctx.dev && ctx.env('OAUTHSETUP_GITHUB_WEB')) || 'https://github.com'
+}
+function githubAPI(ctx) {
+  return (ctx.dev && ctx.env('OAUTHSETUP_GITHUB_API')) || 'https://api.github.com'
+}
+
+module.exports = {
+  requireSuperuser,
+  saveProvider,
+  status,
+  newGitHubState,
+  takeGitHubState,
+  convertManifestCode,
+  checkGoogleClient,
+  githubWeb,
+  githubAPI,
+}
