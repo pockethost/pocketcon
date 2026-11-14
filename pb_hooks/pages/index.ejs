@@ -25,7 +25,6 @@
 
   <div class="actions">
     <a class="btn primary" href="/register">Register</a>
-    <a class="btn highlight" href="/speak">Give a talk</a>
     <a class="btn" href="<%= event.discord %>">Join the Discord</a>
     <a class="btn" href="/pocketcon-2027.ics">Add to calendar</a>
   </div>
@@ -45,7 +44,17 @@
         </div>
       </li>
     <% }) %>
+    <li class="open-slot">
+      <a href="/speak">
+        <span class="num"><%= String(agenda.length + 1).padStart(2, '0') %></span>
+        <div>
+          <p class="tag">Open slot</p>
+          <h3>Your talk here</h3>
+          <p>Built something with PocketBase? Propose a talk, lightning talk or demo →</p>
+        </div>
+      </a>
+    </li>
   </ol>
 </section>
 
-<script src="/countdown.js?v=2026-11-14b" defer></script>
+<script src="/countdown.js?v=2026-11-14c" defer></script>

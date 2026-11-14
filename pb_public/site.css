@@ -192,6 +192,10 @@ h2 {
   margin: 0 0 4px !important;
 }
 .agenda h3 { margin: 0 0 4px; font-size: 1.15rem; }
+.agenda li.open-slot { padding: 0; background: transparent; border: 2px dashed var(--accent); }
+.open-slot a { display: flex; gap: 18px; padding: 20px; width: 100%; color: var(--text); text-decoration: none; border-radius: 12px; }
+.open-slot a:hover { background: rgba(255, 122, 69, 0.08); }
+.open-slot h3 { color: var(--accent-2); }
 .agenda p { margin: 0; color: var(--muted); }
 
 .faq dl { margin: 0; display: grid; gap: 1.25rem; max-width: 40rem; }
