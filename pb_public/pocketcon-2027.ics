@@ -8,7 +8,7 @@ DTSTAMP:20261109T000000Z
 DTSTART;VALUE=DATE:20270206
 DTEND;VALUE=DATE:20270207
 SUMMARY:PocketCon 2027
-DESCRIPTION:A free livestream on the state of PocketBase and PocketHost. Start time and stream link posted Jan 1. https://discord.gg/nVTxCMEcGT
+DESCRIPTION:A free livestream about PocketBase. Start time and stream link go out Jan 1. https://discord.gg/XkAetnQEuc
 URL:https://pocketcon.dev
 END:VEVENT
 END:VCALENDAR
