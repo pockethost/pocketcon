@@ -1,0 +1,100 @@
+<!doctype html>
+<!-- PocketCon 2027 T-shirt art, v2. Render: headless Chrome, window 1200x1200 (see render.sh). ?bg=dark|light|none -->
+<html>
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=JetBrains+Mono:wght@700&display=block" rel="stylesheet" />
+<style>
+  html, body { margin: 0; width: 1200px; height: 1200px; background: transparent; }
+  body.dark { background: #0b0d12; }
+  body.light { background: #f4f1ea; }
+  svg { display: block; }
+  .word { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1200 1200" width="1200" height="1200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd25a" />
+      <stop offset="0.5" stop-color="#ff7a45" />
+      <stop offset="1" stop-color="#ff3d6e" />
+    </linearGradient>
+    <linearGradient id="hot" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff3d6e" />
+      <stop offset="0.5" stop-color="#ff7a45" />
+      <stop offset="1" stop-color="#ffd25a" />
+    </linearGradient>
+    <linearGradient id="capTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a2f3f" />
+      <stop offset="1" stop-color="#141824" />
+    </linearGradient>
+    <linearGradient id="capSide" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7a45" />
+      <stop offset="1" stop-color="#c43a2a" />
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.22" />
+      <stop offset="0.45" stop-color="#fff" stop-opacity="0" />
+    </linearGradient>
+    <!-- Retro sun: solid on top, sliced into thinning bands below -->
+    <mask id="slices">
+      <rect width="1200" height="1200" fill="#fff" />
+      <g fill="#000">
+        <rect x="0" y="400" width="1200" height="8" />
+        <rect x="0" y="442" width="1200" height="12" />
+        <rect x="0" y="484" width="1200" height="16" />
+        <rect x="0" y="526" width="1200" height="20" />
+        <rect x="0" y="568" width="1200" height="24" />
+        <rect x="0" y="610" width="1200" height="28" />
+      </g>
+    </mask>
+  </defs>
+
+  <!-- sun -->
+  <circle cx="600" cy="400" r="305" fill="url(#sun)" mask="url(#slices)" />
+
+  <!-- sparkles -->
+  <g id="sparkles" fill="#ffd25a">
+    <path d="M175 210 l10 34 34 10 -34 10 -10 34 -10 -34 -34 -10 34 -10z" />
+    <path d="M1015 150 l7 24 24 7 -24 7 -7 24 -7 -24 -24 -7 24 -7z" />
+    <path d="M1050 560 l6 20 20 6 -20 6 -6 20 -6 -20 -20 -6 20 -6z" />
+    <path d="M140 600 l5 16 16 5 -16 5 -5 16 -5 -16 -16 -5 16 -5z" />
+  </g>
+
+  <!-- keycap: extruded side, top face, bevel, shine -->
+  <g transform="translate(600 430) rotate(-6)">
+    <rect x="-200" y="-182" width="400" height="400" rx="70" id="capShadow" fill="#0b0d12" opacity="0.55" transform="translate(18 26)" />
+    <rect x="-200" y="-192" width="400" height="400" rx="70" fill="url(#capSide)" />
+    <rect x="-200" y="-222" width="400" height="400" rx="70" fill="url(#capTop)" stroke="#f4f1ea" stroke-width="14" />
+    <rect x="-172" y="-194" width="344" height="344" rx="48" fill="none" stroke="#f4f1ea" stroke-opacity="0.12" stroke-width="4" />
+    <rect x="-193" y="-215" width="386" height="386" rx="64" fill="url(#shine)" />
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="34">
+      <!-- P, top left -->
+      <path d="M-118 -150 V22 M-118 -150 H-64 A52 52 0 0 1 -64 -46 H-118" stroke="#f4f1ea" />
+      <!-- C, bottom right -->
+      <path d="M126 -12 A82 82 0 1 0 126 112" stroke="url(#hot)" />
+    </g>
+  </g>
+
+  <!-- wordmark -->
+  <text x="600" y="855" text-anchor="middle" class="word" font-size="148" letter-spacing="6" fill="#f4f1ea" id="wm">POCKETCON</text>
+  <text x="600" y="1035" text-anchor="middle" class="word" font-size="200" letter-spacing="10"
+        fill="none" stroke="url(#hot)" stroke-width="10" stroke-linejoin="round">2027</text>
+  <g class="mono" font-size="34" letter-spacing="8" fill="#ffd25a" text-anchor="middle">
+    <text x="600" y="1110">FEB 06 · LIVE ON DISCORD</text>
+  </g>
+</svg>
+<script>
+  const bg = new URLSearchParams(location.search).get('bg') || 'dark'
+  document.body.className = bg
+  if (bg === 'light') {
+    document.getElementById('wm').setAttribute('fill', '#0b0d12')
+    document.querySelector('.mono').setAttribute('fill', '#c43a2a')
+    document.getElementById('capShadow').setAttribute('opacity', '0.15')
+    document.getElementById('sparkles').setAttribute('fill', '#ff7a45')
+  }
+</script>
+</body>
+</html>
