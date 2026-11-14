@@ -1,10 +1,13 @@
-<% meta('title', 'Register') %>
+<% meta('title', 'Register'); const event = resolve('event') %>
 <section class="page">
   <h1 class="page-title">Register</h1>
   <p class="lede">Free. You'll get the stream link and schedule by email.</p>
 
   <div data-signed-in hidden>
     <p class="ok">You're registered as <b data-email></b>. See you on February 6.</p>
+    <% if (event.shirtUrl) { %>
+      <p class="shirt-note">Want the PocketCon 2027 shirt? <a href="<%= event.shirtUrl %>">Get one here</a>. It's optional and separate from registration.</p>
+    <% } %>
     <div class="actions">
       <a class="btn highlight" href="/speak">Propose a talk</a>
       <button class="btn" type="button" data-sign-out>Sign out</button>
