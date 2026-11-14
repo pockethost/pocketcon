@@ -48,18 +48,21 @@
     // Google / GitHub buttons appear only for providers enabled on the users collection (admin UI).
     const oauth = document.querySelector('[data-oauth]')
     const oauthErr = oauth.querySelector('[data-oauth-error]')
+    // Shown when any provider is on and nobody is signed in; follows sign-in and sign-out like [data-signed-out].
+    let anyProvider = false
+    const renderOAuth = () => (oauth.hidden = !anyProvider || PocketCon.pb.authStore.isValid)
+    PocketCon.pb.authStore.onChange(renderOAuth)
     PocketCon.pb
       .collection('users')
       .listAuthMethods()
       .then((m) => {
         const names = (m.oauth2?.enabled ? m.oauth2.providers : []).map((p) => p.name)
-        let any = false
         oauth.querySelectorAll('[data-provider]').forEach((b) => {
           const on = names.includes(b.dataset.provider)
           b.hidden = !on
-          any = any || on
+          anyProvider = anyProvider || on
         })
-        if (any && !PocketCon.pb.authStore.isValid) oauth.hidden = false
+        renderOAuth()
       })
       .catch(() => {})
     oauth.querySelectorAll('[data-provider]').forEach((b) =>
