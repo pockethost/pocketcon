@@ -9,7 +9,7 @@ svg = svg.replace('<defs>', '<title id="splash-title">PocketCon 2027, February 6
 # Fonts come from the page (Space Grotesk 700, JetBrains Mono 700), so set them inline instead of via the design file's classes.
 svg = svg.replace('class="word"', 'font-family="Space Grotesk, sans-serif" font-weight="700"')
 svg = svg.replace('class="mono"', 'font-family="JetBrains Mono, monospace" font-weight="700"')
-out = os.path.join(here, '..', 'pb_hooks', 'pages', '_private', 'splash.svg')
+out = os.path.join(here, '..', 'pb_pages', '_private', 'splash.svg')
 os.makedirs(os.path.dirname(out), exist_ok=True)
 open(out, 'w').write('<!-- Generated from design/tshirt-v2.html by design/splash.py; edit the design file, not this. -->\n' + svg + '\n')
 print('wrote', os.path.relpath(out))

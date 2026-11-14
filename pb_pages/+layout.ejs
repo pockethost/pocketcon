@@ -1,5 +1,5 @@
 <%
-  const event = resolve('event')
+  const event = ctx.resolve('event')
   const title = meta('title')
   const description =
     meta('description') ||
@@ -34,7 +34,7 @@
       </nav>
     </header>
 
-    <main><%- slot %></main>
+    <main><%- slot() %></main>
 
     <footer>
       <p>

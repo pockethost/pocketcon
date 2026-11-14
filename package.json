@@ -4,11 +4,8 @@
   "version": "0.1.0",
   "description": "PocketCon 2027: a free livestream about PocketBase",
   "scripts": {
-    "dev": "pocketbase --dir=pb_data --dev serve",
+    "dev": "pocketone serve --dev --dir=pb_data",
     "deploy": "pockethost deploy pocketcon"
-  },
-  "dependencies": {
-    "pocketpages": "^0.22.5"
   },
   "license": "MIT"
 }

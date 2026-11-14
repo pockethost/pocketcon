@@ -1,5 +1,5 @@
 <%
-  const event = resolve('event')
+  const event = ctx.resolve('event')
   const agenda = [
     { kind: 'Keynote', title: 'PocketBase in 2027', speaker: 'Speaker TBD' },
     { kind: 'Presentation', title: 'PocketOne, the community fork of PocketBase', speaker: 'Ben Allfree' },
@@ -8,7 +8,7 @@
 %>
 <section class="hero">
   <h1 class="visually-hidden">PocketCon 2027 · <%= event.date %> · free livestream on Discord</h1>
-  <div class="splash"><%- resolve('splash.svg', { mode: 'raw' }) %></div>
+  <div class="splash"><%- ctx.resolve('splash.svg', { mode: 'raw' }) %></div>
   <p class="lede">A day for the PocketBase community: where it stands, where it's going, and what people are building with it.</p>
 
   <div class="countdown" id="countdown" data-starts="<%= event.startsAt %>" aria-live="polite">
