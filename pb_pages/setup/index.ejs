@@ -1,0 +1,164 @@
+<%
+  meta('title', 'Sign-in setup')
+  const flash = ctx.flash() || {}
+%>
+<section class="page setup">
+  <h1 class="page-title">Sign-in setup</h1>
+  <p class="lede">Turns on "Continue with GitHub" and "Continue with Google" on the register page. For superusers of this site only. Client secrets go straight into PocketBase and are never shown here.</p>
+
+  <% if (flash.ok) { %>
+    <div class="ok"><p><%= flash.ok %></p><% if (flash.github) { %><p><a href="<%= flash.github %>">Open the app on GitHub</a></p><% } %></div>
+  <% } %>
+  <% if (flash.error) { %><p class="error"><%= flash.error %></p><% } %>
+
+  <div data-setup-signed-out hidden>
+    <p>Sign in to the <a href="/_/">admin dashboard</a> in this browser as a superuser, then reload this page.</p>
+  </div>
+
+  <div data-setup-signed-in hidden>
+    <h2>Status</h2>
+    <ul class="setup-status">
+      <li data-status="github">GitHub: <b>checking…</b></li>
+      <li data-status="google">Google: <b>checking…</b></li>
+    </ul>
+
+    <h2>GitHub</h2>
+    <p>Creates a GitHub App for sign-in. GitHub opens with everything filled in: you click <b>Create GitHub App</b> and land back here, connected.</p>
+    <form class="form" id="github-form">
+      <label>App name <span class="opt">(must be unique on GitHub)</span> <input name="name" value="PocketCon sign-in" required maxlength="34" /></label>
+      <label>Organization <span class="opt">(optional; empty creates it on your personal account)</span> <input name="org" placeholder="pockethost" /></label>
+      <div class="actions"><button class="btn primary" type="submit">Connect GitHub</button></div>
+      <p class="error" data-error hidden></p>
+    </form>
+
+    <h2>Google</h2>
+    <ol class="setup-steps">
+      <li>Open <a href="https://console.cloud.google.com/auth/branding" target="_blank" rel="noopener">Google Auth Platform → Branding</a>, pick or create a project, and fill in the app name (PocketCon), support email and, under authorized domains, <code data-host></code>.</li>
+      <li>Under <a href="https://console.cloud.google.com/auth/audience" target="_blank" rel="noopener">Audience</a>, choose <b>External</b> and <b>Publish app</b> (the basic profile and email scopes need no review).</li>
+      <li>Under <a href="https://console.cloud.google.com/auth/clients/create" target="_blank" rel="noopener">Clients → Create client</a>, choose <b>Web application</b> and add:
+        <div class="copy-row">Authorized JavaScript origin <code data-origin></code> <button class="btn copy" type="button" data-copy="origin">Copy</button></div>
+        <div class="copy-row">Authorized redirect URI <code data-redirect></code> <button class="btn copy" type="button" data-copy="redirect">Copy</button></div>
+      </li>
+      <li>Paste the client ID and secret Google shows you:</li>
+    </ol>
+    <form class="form" id="google-form" autocomplete="off">
+      <label>Client ID <input name="clientId" placeholder="….apps.googleusercontent.com" required /></label>
+      <label>Client secret <input name="clientSecret" type="password" required /></label>
+      <p class="hint">Checked with Google before saving.</p>
+      <div class="actions"><button class="btn primary" type="submit">Save Google sign-in</button></div>
+      <p class="error" data-error hidden></p>
+      <p class="ok" data-ok hidden></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  ;(() => {
+    const origin = location.origin
+    const redirect = origin + '/api/oauth2-redirect'
+    document.querySelectorAll('[data-origin]').forEach((el) => (el.textContent = origin))
+    document.querySelectorAll('[data-redirect]').forEach((el) => (el.textContent = redirect))
+    document.querySelectorAll('[data-host]').forEach((el) => (el.textContent = location.hostname))
+    document.querySelectorAll('[data-copy]').forEach((b) =>
+      b.addEventListener('click', () => {
+        navigator.clipboard.writeText(b.dataset.copy === 'origin' ? origin : redirect)
+        b.textContent = 'Copied'
+        setTimeout(() => (b.textContent = 'Copy'), 1500)
+      }),
+    )
+
+    // The admin dashboard (/_/) keeps the superuser session in localStorage on this origin; reuse it.
+    const superuserToken = () => {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i)
+        if (!key.startsWith('__pb_superusers__')) continue
+        try {
+          const { token } = JSON.parse(localStorage.getItem(key))
+          const exp = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).exp
+          if (exp * 1000 > Date.now()) return token
+        } catch {}
+      }
+      return ''
+    }
+    const token = superuserToken()
+    const show = (signedIn) => {
+      document.querySelector('[data-setup-signed-in]').hidden = !signedIn
+      document.querySelector('[data-setup-signed-out]').hidden = signedIn
+    }
+
+    const api = async (path, body) => {
+      const res = await fetch(path, {
+        method: body ? 'POST' : 'GET',
+        headers: { Authorization: token, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+        body: body ? JSON.stringify(body) : undefined,
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.message || `HTTP ${res.status}`)
+      return data
+    }
+
+    const renderStatus = (s) => {
+      for (const name of ['github', 'google']) {
+        const p = s.providers[name]
+        const on = s.enabled && p && p.clientId && p.hasSecret
+        document.querySelector(`[data-status="${name}"] b`).textContent = on ? `on (client ${p.clientId})` : 'off'
+      }
+    }
+
+    if (!token) return show(false)
+    api('/setup/status')
+      .then((s) => {
+        show(true)
+        renderStatus(s)
+      })
+      .catch(() => show(false))
+
+    // GitHub: get a one-time state, then post the app manifest to GitHub's "new app" page.
+    const gh = document.getElementById('github-form')
+    gh.addEventListener('submit', (e) => {
+      e.preventDefault()
+      PocketCon.run(gh, async () => {
+        const name = gh.elements.name.value.trim()
+        const org = gh.elements.org.value.trim()
+        if (org && !/^[A-Za-z0-9-]+$/.test(org)) throw new Error('That organization name has characters GitHub does not allow.')
+        const { state } = await api('/setup/github/start', {})
+        const manifest = {
+          name,
+          url: origin,
+          description: 'Sign in with GitHub on ' + location.hostname,
+          redirect_url: origin + '/setup/github/callback',
+          callback_urls: [redirect],
+          hook_attributes: { url: origin + '/', active: false },
+          public: true,
+          default_permissions: { email_addresses: 'read' },
+        }
+        const base = org ? `https://github.com/organizations/${org}/settings/apps/new` : 'https://github.com/settings/apps/new'
+        const f = document.createElement('form')
+        f.method = 'post'
+        f.action = `${base}?state=${encodeURIComponent(state)}`
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = 'manifest'
+        input.value = JSON.stringify(manifest)
+        f.appendChild(input)
+        document.body.appendChild(f)
+        f.submit()
+      })
+    })
+
+    // Google: the server checks the pair with Google, then saves it.
+    const g = document.getElementById('google-form')
+    g.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const ok = g.querySelector('[data-ok]')
+      ok.hidden = true
+      PocketCon.run(g, async () => {
+        const r = await api('/setup/google', { clientId: g.elements.clientId.value, clientSecret: g.elements.clientSecret.value, redirectURI: redirect })
+        g.reset()
+        ok.textContent = 'Google sign-in is on.'
+        ok.hidden = false
+        renderStatus(r.status)
+      })
+    })
+  })()
+</script>
