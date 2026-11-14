@@ -61,7 +61,7 @@ a { color: var(--accent-2); }
 .nav a:hover { color: var(--text); }
 .nav .account { color: var(--accent-2); }
 
-.hero { padding: 1rem 0 3rem; text-align: center; }
+.hero { padding: 2.5rem 0 3rem; text-align: center; }
 .hero .lede { margin-left: auto; margin-right: auto; }
 .hero .countdown { margin-left: auto; margin-right: auto; }
 .hero .actions { justify-content: center; }
@@ -226,7 +226,7 @@ footer {
 .cta p { margin: 0; color: var(--muted); }
 
 /* Inner pages and forms */
-.page { padding: 3rem 0; max-width: 40rem; }
+.page { padding: 4rem 0 3rem; max-width: 40rem; }
 .page-title { font-size: clamp(2.25rem, 8vw, 3.5rem); margin-bottom: 1rem; }
 .page .lede { margin-bottom: 2rem; }
 .form { display: grid; gap: 14px; margin-bottom: 2rem; }
