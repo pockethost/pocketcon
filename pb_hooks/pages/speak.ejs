@@ -1,0 +1,65 @@
+<% meta('title', 'Give a talk') %>
+<section class="page">
+  <h1 class="page-title">Give a talk</h1>
+  <p class="lede">
+    Built something with PocketBase, or learned something the hard way? Propose a talk, a 5-minute lightning talk or a
+    live demo. Talks are streamed on Discord and recorded.
+  </p>
+
+  <p class="note" data-signed-out><a href="/register?next=/speak">Register</a> first, then come back to submit.</p>
+
+  <div data-signed-in hidden>
+    <div id="mine"></div>
+    <form class="form" id="talk-form">
+      <label>Your name <input name="name" maxlength="120" required autocomplete="name" /></label>
+      <label>Contact email <input name="email" type="email" required autocomplete="email" /></label>
+      <label>Talk title <input name="title" minlength="3" maxlength="140" required /></label>
+      <label>Format
+        <select name="format" required>
+          <option value="talk">Talk (about 20 minutes)</option>
+          <option value="lightning">Lightning talk (5 minutes)</option>
+          <option value="demo">Live demo</option>
+        </select>
+      </label>
+      <label>What's it about? <textarea name="abstract" minlength="20" maxlength="2000" rows="6" required></textarea></label>
+      <label>About you <span class="opt">(optional)</span> <textarea name="bio" maxlength="1000" rows="3"></textarea></label>
+      <label>Links <span class="opt">(optional: GitHub, site, past talks)</span> <input name="links" maxlength="500" /></label>
+      <p class="hint">Only the PocketCon team sees proposals.</p>
+      <div class="actions"><button class="btn primary" type="submit">Submit proposal</button></div>
+      <p class="error" data-error hidden></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('pocketcon:ready', () => {
+    const { pb, esc, run } = PocketCon
+    const form = document.getElementById('talk-form')
+    const mine = document.getElementById('mine')
+    if (!pb.authStore.isValid) return
+    form.email.value = pb.authStore.record.email || ''
+
+    const load = async () => {
+      const items = await pb.collection('talk_proposals').getFullList({ sort: '-created' })
+      mine.innerHTML = items.length
+        ? `<div class="ok"><p>Thanks! We have ${items.length === 1 ? 'your proposal' : `your ${items.length} proposals`}:</p><ul>${items
+            .map((p) => `<li><b>${esc(p.title)}</b> (${esc(p.format)})</li>`)
+            .join('')}</ul><p>We'll reach out by email. Want to propose another? Use the form below.</p></div>`
+        : ''
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const data = Object.fromEntries(new FormData(form))
+      await run(form, async () => {
+        await pb.collection('talk_proposals').create({ ...data, user: pb.authStore.record.id })
+        form.reset()
+        form.email.value = pb.authStore.record.email || ''
+        await load()
+        mine.scrollIntoView({ behavior: 'smooth' })
+      })
+    })
+
+    load()
+  })
+</script>

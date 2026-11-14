@@ -1,0 +1,71 @@
+<% meta('title', 'Topics') %>
+<section class="page">
+  <h1 class="page-title">Topics</h1>
+  <p class="lede">What should PocketCon cover? Suggest a topic or vote for the ones you want to hear about.</p>
+
+  <form class="form" id="topic-form" data-signed-in hidden>
+    <label>Topic <input name="title" maxlength="120" minlength="3" required placeholder="e.g. Scaling realtime subscriptions" /></label>
+    <label>Details <span class="opt">(optional)</span> <textarea name="details" maxlength="1000" rows="3"></textarea></label>
+    <div class="actions"><button class="btn primary" type="submit">Suggest topic</button></div>
+    <p class="error" data-error hidden></p>
+  </form>
+  <p class="note" data-signed-out><a href="/register?next=/topics">Register</a> to suggest and vote on topics.</p>
+
+  <ol class="topics" id="topics" aria-live="polite"><li class="empty">Loading…</li></ol>
+</section>
+
+<script>
+  document.addEventListener('pocketcon:ready', () => {
+    const { pb, esc, run } = PocketCon
+    const list = document.getElementById('topics')
+    const form = document.getElementById('topic-form')
+
+    const load = async () => {
+      const topics = await pb.collection('topic_scores').getFullList({ sort: '-votes,-created' })
+      const mine = new Map()
+      if (pb.authStore.isValid) {
+        const votes = await pb.collection('topic_votes').getFullList({ filter: pb.filter('user = {:u}', { u: pb.authStore.record.id }) })
+        votes.forEach((v) => mine.set(v.topic, v.id))
+      }
+      if (!topics.length) {
+        list.innerHTML = '<li class="empty">No topics yet. Be the first.</li>'
+        return
+      }
+      list.innerHTML = topics
+        .map(
+          (t) => `<li>
+            <button class="vote${mine.has(t.id) ? ' on' : ''}" data-topic="${t.id}" ${pb.authStore.isValid ? '' : 'disabled'}
+              aria-pressed="${mine.has(t.id)}" aria-label="Vote for this topic">▲<b>${t.votes}</b></button>
+            <div><h3>${esc(t.title)}</h3>${t.details ? `<p>${esc(t.details)}</p>` : ''}</div>
+          </li>`
+        )
+        .join('')
+      list.querySelectorAll('[data-topic]').forEach((b) =>
+        b.addEventListener('click', async () => {
+          b.disabled = true
+          try {
+            const id = b.dataset.topic
+            if (mine.has(id)) await pb.collection('topic_votes').delete(mine.get(id))
+            else await pb.collection('topic_votes').create({ topic: id, user: pb.authStore.record.id })
+          } catch (err) {
+            alert(PocketCon.message(err))
+          }
+          await load()
+        })
+      )
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const data = Object.fromEntries(new FormData(form))
+      await run(form, async () => {
+        const topic = await pb.collection('topics').create({ ...data, author: pb.authStore.record.id })
+        await pb.collection('topic_votes').create({ topic: topic.id, user: pb.authStore.record.id })
+        form.reset()
+        await load()
+      })
+    })
+
+    load().catch((err) => (list.innerHTML = `<li class="empty">${esc(PocketCon.message(err))}</li>`))
+  })
+</script>

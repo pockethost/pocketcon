@@ -1,100 +1,72 @@
 <%
   const event = {
-    name: 'PocketCon 2027',
     date: 'Saturday, February 6, 2027',
     // Start time is announced Jan 1. Until then the countdown runs to the start of the day (UTC).
     startsAt: '2027-02-06T00:00:00Z',
     discord: 'https://discord.gg/nVTxCMEcGT',
   }
   const agenda = [
-    ['The state of PocketBase', 'Where PocketBase is today, what changed this year, and where it is heading.'],
-    ['The state of PocketHost', 'Numbers, what shipped in 2026, and what running thousands of PocketBase instances teaches you.'],
-    ['What is next in 2027', 'The roadmap for PocketHost and the open source work around it.'],
-    ['Q&A', 'Bring your questions. Anything about PocketBase, PocketHost or building with them.'],
+    { kind: 'Keynote', title: 'PocketBase in 2027', speaker: 'Speaker TBD' },
+    { kind: 'Presentation', title: 'PocketOne, the community fork of PocketBase', speaker: 'Speaker TBD' },
+    { kind: 'Presentation', title: 'How I host my PocketBai', speaker: 'Ben Allfree, creator of PocketHost' },
   ]
-%><!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title><%= event.name %> · February 6, 2027</title>
-    <meta name="description" content="PocketCon 2027 is a free livestream on Discord about the state of PocketBase and PocketHost. Saturday, February 6, 2027." />
-    <meta property="og:title" content="<%= event.name %>" />
-    <meta property="og:description" content="A free livestream on the state of PocketBase and PocketHost. Saturday, February 6, 2027, on Discord." />
-    <meta property="og:type" content="website" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/site.css" />
-  </head>
-  <body>
-    <header class="top">
-      <a class="brand" href="/">Pocket<span>Con</span></a>
-      <a class="top-link" href="<%= event.discord %>">Join the Discord</a>
-    </header>
+%>
+<section class="hero">
+  <p class="kicker">Free livestream · Discord</p>
+  <h1>Pocket<span>Con</span> <em>2027</em></h1>
+  <p class="date"><%= event.date %></p>
+  <p class="lede">A day for the PocketBase community: where it stands, where it's going, and what people are building with it.</p>
 
-    <main>
-      <section class="hero">
-        <p class="kicker">A free livestream · on Discord</p>
-        <h1>Pocket<span>Con</span> <em>2027</em></h1>
-        <p class="date"><%= event.date %></p>
-        <p class="lede">
-          One afternoon on the state of PocketBase, the state of PocketHost and what comes next.
-          Hosted by Ben Allfree, creator of PocketHost.
-        </p>
+  <div class="countdown" id="countdown" data-starts="<%= event.startsAt %>" aria-live="polite">
+    <div><b data-unit="d">--</b><span>days</span></div>
+    <div><b data-unit="h">--</b><span>hours</span></div>
+    <div><b data-unit="m">--</b><span>min</span></div>
+    <div><b data-unit="s">--</b><span>sec</span></div>
+  </div>
 
-        <div class="countdown" id="countdown" data-starts="<%= event.startsAt %>" aria-live="polite">
-          <div><b data-unit="d">--</b><span>days</span></div>
-          <div><b data-unit="h">--</b><span>hours</span></div>
-          <div><b data-unit="m">--</b><span>min</span></div>
-          <div><b data-unit="s">--</b><span>sec</span></div>
+  <div class="actions">
+    <a class="btn primary" href="/register">Register</a>
+    <a class="btn" href="<%= event.discord %>">Join the Discord</a>
+    <a class="btn" href="/pocketcon-2027.ics">Add to calendar</a>
+  </div>
+  <p class="note">Start time and stream link go out on January 1.</p>
+</section>
+
+<section class="agenda" id="agenda">
+  <h2>Agenda</h2>
+  <ol>
+    <% agenda.forEach((item, i) => { %>
+      <li>
+        <span class="num"><%= String(i + 1).padStart(2, '0') %></span>
+        <div>
+          <p class="tag"><%= item.kind %></p>
+          <h3><%= item.title %></h3>
+          <p><%= item.speaker %></p>
         </div>
+      </li>
+    <% }) %>
+  </ol>
+</section>
 
-        <div class="actions">
-          <a class="btn primary" href="<%= event.discord %>">Join the Discord</a>
-          <a class="btn" href="/pocketcon-2027.ics">Add to calendar</a>
-        </div>
-        <p class="note">Start time and stream link are posted on January 1.</p>
-      </section>
+<section class="cta-grid">
+  <a class="cta" href="/topics">
+    <h3>Suggest a topic</h3>
+    <p>What should we cover? Add an idea or vote for the ones you want.</p>
+  </a>
+  <a class="cta" href="/speak">
+    <h3>Give a talk</h3>
+    <p>Built something with PocketBase? Propose a talk, lightning talk or demo.</p>
+  </a>
+</section>
 
-      <section class="agenda">
-        <h2>On the program</h2>
-        <ol>
-          <% agenda.forEach(([title, body], i) => { %>
-            <li>
-              <span class="num"><%= String(i + 1).padStart(2, '0') %></span>
-              <div>
-                <h3><%= title %></h3>
-                <p><%= body %></p>
-              </div>
-            </li>
-          <% }) %>
-        </ol>
-      </section>
+<section class="faq">
+  <h2>Good to know</h2>
+  <dl>
+    <dt>Why register?</dt>
+    <dd>You'll get the stream link and schedule by email, and you can vote on topics.</dd>
+    <dt>Will there be a recording?</dt>
+    <dd>Yes, posted in Discord afterward.</dd>
+  </dl>
+</section>
 
-      <section class="faq">
-        <h2>Good to know</h2>
-        <dl>
-          <dt>Does it cost anything?</dt>
-          <dd>No. Join the PocketHost Discord and you're in.</dd>
-          <dt>Will there be a recording?</dt>
-          <dd>Yes. It will be posted in Discord afterward.</dd>
-          <dt>Can I ask questions ahead of time?</dt>
-          <dd>Yes. Post them in Discord and they'll go on the list for the Q&amp;A.</dd>
-        </dl>
-      </section>
-    </main>
-
-    <footer>
-      <p>
-        PocketCon is put on by <a href="https://pockethost.io">PocketHost</a>, the PocketBase hosting service.
-        PocketBase is an independent open source project. This site is built with
-        <a href="https://pocketpages.dev">PocketPages</a> and runs on PocketHost.
-        <a href="https://github.com/pockethost/pocketcon">Source</a>.
-      </p>
-    </footer>
-
-    <script src="/countdown.js" defer></script>
-  </body>
-</html>
+<script src="/countdown.js" defer></script>

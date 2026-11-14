@@ -1,0 +1,45 @@
+<% meta('title', 'Register') %>
+<section class="page">
+  <h1 class="page-title">Register</h1>
+  <p class="lede">Free. You'll get the stream link and schedule by email, and you can vote on topics.</p>
+
+  <div data-signed-in hidden>
+    <p class="ok">You're registered as <b data-email></b>. See you on February 6.</p>
+    <div class="actions">
+      <a class="btn primary" href="/topics">Vote on topics</a>
+      <a class="btn" href="/speak">Propose a talk</a>
+      <button class="btn" type="button" data-sign-out>Sign out</button>
+    </div>
+  </div>
+
+  <form class="form" id="auth-form" data-signed-out>
+    <label>Email <input name="email" type="email" autocomplete="email" required /></label>
+    <label>Password <input name="password" type="password" autocomplete="new-password" minlength="8" required /></label>
+    <p class="hint">At least 8 characters.</p>
+    <div class="actions">
+      <button class="btn primary" type="submit" data-mode="register">Register</button>
+      <button class="btn" type="submit" data-mode="signin">I'm already registered</button>
+    </div>
+    <p class="error" data-error hidden></p>
+  </form>
+</section>
+
+<script>
+  document.addEventListener('pocketcon:ready', () => {
+    const form = document.getElementById('auth-form')
+    let mode = 'register'
+    form.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => (mode = b.dataset.mode)))
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const { email, password } = Object.fromEntries(new FormData(form))
+      await PocketCon.run(form, async () => {
+        if (mode === 'register') {
+          await PocketCon.pb.collection('users').create({ email, password, passwordConfirm: password })
+        }
+        await PocketCon.pb.collection('users').authWithPassword(email, password)
+        const next = new URLSearchParams(location.search).get('next')
+        if (next && next.startsWith('/')) location.href = next
+      })
+    })
+  })
+</script>

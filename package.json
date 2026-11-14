@@ -2,7 +2,7 @@
   "name": "pocketcon",
   "private": true,
   "version": "0.1.0",
-  "description": "PocketCon 2027: a free livestream on the state of PocketBase and PocketHost",
+  "description": "PocketCon 2027: a free livestream about PocketBase",
   "scripts": {
     "dev": "pocketbase --dir=pb_data --dev serve",
     "deploy": "pockethost deploy pocketcon"

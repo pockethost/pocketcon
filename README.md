@@ -1,6 +1,6 @@
 # PocketCon 2027
 
-The site for **PocketCon 2027**, a free livestream on the state of PocketBase and PocketHost. Saturday, February 6, 2027, on [Discord](https://discord.gg/nVTxCMEcGT).
+The site for **PocketCon 2027**, a free livestream about PocketBase. Saturday, February 6, 2027, on [Discord](https://discord.gg/nVTxCMEcGT).
 
 Live at **https://pocketcon.dev** (also https://pocketcon.pockethost.io).
 
@@ -13,7 +13,7 @@ npm install
 pocketbase --dir=pb_data --dev serve   # PocketBase 0.23+
 ```
 
-Pages are in `pb_hooks/pages`. Static files (CSS, JS, favicon, calendar file) are in `pb_public`.
+Pages are in `pb_hooks/pages` (`+layout.ejs` is the shared header and footer). Static files (CSS, `app.js`, favicon, calendar file) are in `pb_public`. Registration, topic suggestions with votes, and talk proposals use the PocketBase JS SDK against the site's own API; the collections and their access rules are in `pb_migrations/`. Votes and proposals are only visible to their owner (and superusers).
 
 ## Deploy
 
