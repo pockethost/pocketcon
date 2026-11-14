@@ -61,7 +61,16 @@ a { color: var(--accent-2); }
 .nav a:hover { color: var(--text); }
 .nav .account { color: var(--accent-2); }
 
-.hero { padding: 4rem 0 3rem; }
+.hero { padding: 1rem 0 3rem; text-align: center; }
+.hero .lede { margin-left: auto; margin-right: auto; }
+.hero .countdown { margin-left: auto; margin-right: auto; }
+.hero .actions { justify-content: center; }
+.splash { max-width: 34rem; margin: 0 auto 1.5rem; }
+.splash-art { display: block; width: 100%; height: auto; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
 
 .kicker, .date, .note, .num, .countdown span {
   font-family: var(--mono);

@@ -12,9 +12,8 @@
   ]
 %>
 <section class="hero">
-  <p class="kicker">Free livestream · Discord</p>
-  <h1>Pocket<span>Con</span> <em>2027</em></h1>
-  <p class="date"><%= event.date %></p>
+  <h1 class="visually-hidden">PocketCon 2027 · <%= event.date %> · free livestream on Discord</h1>
+  <div class="splash"><%- resolve('splash.svg', { mode: 'raw' }) %></div>
   <p class="lede">A day for the PocketBase community: where it stands, where it's going, and what people are building with it.</p>
 
   <div class="countdown" id="countdown" data-starts="<%= event.startsAt %>" aria-live="polite">

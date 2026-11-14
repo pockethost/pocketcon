@@ -10,3 +10,6 @@ for bg in dark light none; do
     --screenshot="$PWD/tshirt-v2-$bg.png" "file://$PWD/tshirt-v2.html?bg=$bg" >/dev/null 2>&1
 done
 echo "$(date +%T) done"
+
+# Keep the home page splash in sync with the shirt art.
+python3 "$PWD/splash.py"
