@@ -284,6 +284,11 @@ button.btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
 .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.85rem; margin: 6px 0 0; }
 .or::before, .or::after { content: ''; flex: 1; border-top: 1px solid var(--line); }
 
+.prose h2 { font-size: 1.25rem; margin: 2rem 0 0.5rem; }
+.prose p, .prose li { color: var(--muted); }
+.prose b { color: var(--text); }
+.prose ul { padding-left: 1.2rem; display: grid; gap: 6px; }
+
 @media (prefers-reduced-motion: reduce) {
   .btn { transition: none; }
   .btn:hover { transform: none; }
